@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vituity Team Astrology Chart</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --fire: #e74c3c; --fire-bg: #fdedec; --fire-glow: #ff6b6b;
+    --earth: #27ae60; --earth-bg: #eafaf1; --earth-glow: #6bcb77;
+    --air: #3498db; --air-bg: #ebf5fb; --air-glow: #74b9ff;
+    --water: #8e44ad; --water-bg: #f4ecf7; --water-glow: #a29bfe;
+    --bg: #0a0a1a; --card: #12122a; --card-hover: #1a1a3e;
+    --text: #e8e8f0; --text-muted: #8888aa; --accent: #c9a0ff;
+    --gold: #ffd700; --border: #2a2a4a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated starfield */
+  .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--dur) ease-in-out infinite alternate; }
+  @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); } }
+
+  .shooting-star {
+    position: fixed; width: 3px; height: 3px; background: white; border-radius: 50%;
+    pointer-events: none; z-index: 0; opacity: 0;
+    animation: shoot 1.5s ease-out forwards;
+  }
+  .shooting-star::after {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 80px; height: 1px;
+    background: linear-gradient(to left, white, transparent);
+    transform-origin: right center;
+    transform: rotate(0deg);
+  }
+  @keyframes shoot {
+    0% { opacity: 0; transform: translate(0,0); }
+    10% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-400px, 300px); }
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
+
+  /* Header with animated gradient */
+  header { text-align: center; padding: 3rem 0 1rem; position: relative; }
+  header h1 {
+    font-family: 'Cinzel', serif; font-size: 3.2rem; font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--gold), #ff6b9d, var(--accent), var(--gold));
+    background-size: 300% 300%;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s ease infinite;
+  }
+  @keyframes shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+  header p { color: var(--text-muted); font-size: 1.1rem; font-weight: 300; }
+  .tagline {
+    font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem; font-style: italic;
+    opacity: 0; animation: fadeUp 1s ease 0.5s forwards;
+  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
+
+  .section-title {
+    font-family: 'Cinzel', serif; font-size: 1.8rem; text-align: center;
+    margin: 3rem 0 0.5rem; color: var(--accent);
+  }
+  .section-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-weight: 300; font-size: 0.95rem; }
+
+  /* Team Grid */
+  .team-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem; margin-bottom: 3rem;
+  }
+
+  .person-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.5rem; position: relative; overflow: hidden;
+    cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    opacity: 0; animation: cardIn 0.6s ease forwards;
+  }
+  .person-card:nth-child(1) { animation-delay: 0.1s; }
+  .person-card:nth-child(2) { animation-delay: 0.2s; }
+  .person-card:nth-child(3) { animation-delay: 0.3s; }
+  .person-card:nth-child(4) { animation-delay: 0.4s; }
+  .person-card:nth-child(5) { animation-delay: 0.5s; }
+  .person-card:nth-child(6) { animation-delay: 0.6s; }
+  @keyframes cardIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(30px); } }
+
+  .person-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(201, 160, 255, 0.2);
+    border-color: var(--accent);
+  }
+  .person-card:active { transform: translateY(-4px) scale(0.98); }
+
+  .person-card .element-stripe {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    transition: height 0.3s ease;
+  }
+  .person-card:hover .element-stripe { height: 5px; }
+
+  .person-card .glow {
+    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    opacity: 0; transition: opacity 0.4s; pointer-events: none;
+    border-radius: 50%;
+  }
+  .person-card:hover .glow { opacity: 0.05; }
+
+  .person-card .symbol {
+    font-size: 3rem; margin-bottom: 0.5rem;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .person-card:hover .symbol { transform: scale(1.2) rotate(10deg); }
+
+  .person-card .name { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.15rem; }
+  .person-card .sun-sign { font-family: 'Cinzel', serif; font-size: 1rem; margin-bottom: 0.5rem; }
+  .person-card .office-role {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px;
+    padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 0.75rem;
+    background: rgba(201, 160, 255, 0.1); color: var(--accent); border: 1px solid rgba(201,160,255,0.2);
+  }
+  .person-card .details { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+  .person-card .details span { display: block; }
+  .person-card .birthday {
+    font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem;
+    padding-top: 0.75rem; border-top: 1px solid var(--border);
+  }
+  .person-card .blurb {
+    font-size: 0.85rem; color: var(--text); margin-top: 0.75rem;
+    font-style: italic; line-height: 1.5;
+  }
+  .person-card .click-hint {
+    font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 0.75rem;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .person-card:hover .click-hint { opacity: 1; }
+
+  .fire .sun-sign { color: var(--fire); }
+  .earth .sun-sign { color: var(--earth); }
+  .air .sun-sign { color: var(--air); }
+  .water .sun-sign { color: var(--water); }
+  .fire .element-stripe { background: linear-gradient(90deg, var(--fire), var(--fire-glow), var(--fire)); background-size: 200%; animation: stripeShimmer 3s ease infinite; }
+  .earth .element-stripe { background: linear-gradient(90deg, var(--earth), var(--earth-glow), var(--earth)); background-size: 200%; animation: stripeShimmer 3s ease infinite; }
+  .air .element-stripe { background: linear-gradient(90deg, var(--air), var(--air-glow), var(--air)); background-size: 200%; animation: stripeShimmer 3s ease infinite; }
+  .water .element-stripe { background: linear-gradient(90deg, var(--water), var(--water-glow), var(--water)); background-size: 200%; animation: stripeShimmer 3s ease infinite; }
+  @keyframes stripeShimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+  .fire .glow { background: radial-gradient(circle, var(--fire), transparent 60%); }
+  .earth .glow { background: radial-gradient(circle, var(--earth), transparent 60%); }
+  .air .glow { background: radial-gradient(circle, var(--air), transparent 60%); }
+  .water .glow { background: radial-gradient(circle, var(--water), transparent 60%); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0); z-index: 100; justify-content: center; align-items: center;
+    padding: 2rem; transition: background 0.3s;
+  }
+  .modal-overlay.active { display: flex; background: rgba(0,0,0,0.85); }
+  .modal {
+    background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+    padding: 2.5rem; max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto;
+    position: relative;
+    transform: scale(0.8) translateY(30px); opacity: 0;
+    animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  @keyframes modalIn { to { transform: scale(1) translateY(0); opacity: 1; } }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem; background: none; border: none;
+    color: var(--text-muted); font-size: 1.8rem; cursor: pointer; transition: all 0.3s;
+    width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.1); color: var(--text); transform: rotate(90deg); }
+  .modal h2 { font-family: 'Cinzel', serif; font-size: 1.6rem; color: var(--accent); margin-bottom: 1rem; }
+  .modal .planet-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  .modal .planet-table th { text-align: left; color: var(--text-muted); font-weight: 400; padding: 0.5rem; border-bottom: 1px solid var(--border); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+  .modal .planet-table td { padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+  .modal .planet-table tr { transition: background 0.2s; }
+  .modal .planet-table tr:hover { background: rgba(201,160,255,0.05); }
+  .modal .big-three {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0;
+    text-align: center;
+  }
+  .modal .big-three-item {
+    background: rgba(201,160,255,0.05); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1rem 0.5rem;
+  }
+  .modal .big-three-item .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 0.25rem; }
+  .modal .big-three-item .value { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--accent); }
+
+  /* Zodiac Wheel */
+  .wheel-container { display: flex; justify-content: center; margin: 2rem 0; position: relative; }
+  .wheel-svg { max-width: 520px; width: 100%; }
+  .wheel-svg text { transition: all 0.3s; }
+
+  /* Element & Modality */
+  .breakdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
+  @media (max-width: 600px) { .breakdown-grid { grid-template-columns: 1fr; } }
+
+  .breakdown-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.5rem;
+    transition: all 0.3s;
+  }
+  .breakdown-card:hover { border-color: rgba(201,160,255,0.3); }
+  .breakdown-card h3 { font-family: 'Cinzel', serif; font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent); }
+  .bar-row { display: flex; align-items: center; margin-bottom: 0.75rem; gap: 0.75rem; }
+  .bar-label { width: 80px; font-size: 0.85rem; text-align: right; }
+  .bar-track { flex: 1; height: 28px; background: var(--border); border-radius: 14px; overflow: hidden; position: relative; }
+  .bar-fill {
+    height: 100%; border-radius: 14px; display: flex; align-items: center;
+    justify-content: flex-end; padding-right: 10px; font-size: 0.75rem; font-weight: 600;
+    width: 0; transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .bar-fill.animated { /* width set by JS */ }
+  .bar-emoji { font-size: 1rem; margin-right: 6px; }
+  .bar-count { width: 30px; text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+  .element-insight { font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); line-height: 1.5; }
+
+  /* Compatibility Grid */
+  .compat-wrapper { overflow-x: auto; margin: 2rem 0; }
+  .compat-grid { border-collapse: separate; border-spacing: 3px; width: 100%; min-width: 400px; }
+  .compat-grid th, .compat-grid td {
+    padding: 0.7rem; text-align: center; font-size: 0.85rem;
+    border-radius: 6px; transition: all 0.3s;
+  }
+  .compat-grid th {
+    background: var(--card); color: var(--accent); font-family: 'Cinzel', serif;
+    font-size: 0.75rem; font-weight: 400;
+  }
+  .compat-grid td { background: var(--card); cursor: default; position: relative; }
+  .compat-grid td:hover { transform: scale(1.15); z-index: 2; }
+  .compat-high { background: #1a3a1a !important; color: #6bcb77; }
+  .compat-good { background: #1a2a3a !important; color: #74b9ff; }
+  .compat-neutral { background: #2a2a3a !important; color: var(--text-muted); }
+  .compat-challenging { background: #3a1a1a !important; color: #ff6b6b; }
+  .compat-self { background: var(--border) !important; color: var(--gold); }
+
+  .compat-legend { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+  .compat-legend span { font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; }
+  .compat-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed; background: var(--card); border: 1px solid var(--accent);
+    border-radius: 12px; padding: 0.75rem 1rem; font-size: 0.85rem; max-width: 280px;
+    pointer-events: none; z-index: 200; opacity: 0; transition: opacity 0.2s;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5); line-height: 1.5;
+  }
+  .tooltip.visible { opacity: 1; }
+  .tooltip .tt-title { font-family: 'Cinzel', serif; color: var(--accent); font-size: 0.8rem; margin-bottom: 0.25rem; }
+
+  /* Superlatives */
+  .superlatives-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem; margin: 2rem 0;
+  }
+  .superlative-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1rem 1.25rem; text-align: center; transition: all 0.3s;
+  }
+  .superlative-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .superlative-card .award { font-size: 1.8rem; margin-bottom: 0.25rem; }
+  .superlative-card .award-title { font-family: 'Cinzel', serif; font-size: 0.85rem; color: var(--gold); margin-bottom: 0.25rem; }
+  .superlative-card .award-name { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .superlative-card .award-reason { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
+
+  /* Add Person Form */
+  .add-section {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 2rem; margin: 2rem 0; transition: all 0.3s;
+  }
+  .add-section:hover { border-color: rgba(201,160,255,0.3); }
+  .add-section h3 { font-family: 'Cinzel', serif; color: var(--accent); margin-bottom: 1rem; }
+  .form-row { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .form-row input, .form-row select {
+    flex: 1; min-width: 150px; padding: 0.75rem 1rem; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 10px; color: var(--text);
+    font-family: 'Outfit', sans-serif; font-size: 0.95rem; transition: all 0.3s;
+  }
+  .form-row input:focus, .form-row select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 16px rgba(201,160,255,0.15); }
+  .btn {
+    padding: 0.75rem 2.5rem; background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    border: none; border-radius: 10px; color: white; font-family: 'Outfit', sans-serif;
+    font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .btn::after {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(transparent, rgba(255,255,255,0.1), transparent);
+    transform: rotate(45deg) translateY(-100%); transition: transform 0.6s;
+  }
+  .btn:hover::after { transform: rotate(45deg) translateY(100%); }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(201, 160, 255, 0.35); }
+  .btn:active { transform: translateY(0) scale(0.97); }
+  .btn-small { padding: 0.4rem 1rem; font-size: 0.85rem; }
+  .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+  .note { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; }
+  .optional-tag { font-size: 0.7rem; color: var(--text-muted); font-weight: 300; }
+
+  /* Confetti */
+  .confetti {
+    position: fixed; pointer-events: none; z-index: 300;
+    font-size: 1.5rem; animation: confettiFall 2s ease forwards;
+  }
+  @keyframes confettiFall {
+    0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+    100% { opacity: 0; transform: translateY(400px) rotate(720deg) scale(0.3); }
+  }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  footer { text-align: center; padding: 3rem 0; color: var(--text-muted); font-size: 0.8rem; }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  @media print {
+    body { background: white; color: #333; }
+    .stars, .add-section, .shooting-star, .confetti { display: none; }
+    .person-card { border: 1px solid #ccc; break-inside: avoid; opacity: 1; animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="tooltip" id="tooltip"></div>
+
+<div class="container">
+  <header>
+    <h1>&#x2728; Cosmic Team Chart &#x2728;</h1>
+    <p>The Vituity Marketing Team &mdash; Written in the Stars</p>
+    <div class="tagline" id="tagline"></div>
+  </header>
+
+  <!-- ZODIAC WHEEL -->
+  <div class="reveal">
+    <h2 class="section-title">The Cosmic Wheel</h2>
+    <p class="section-subtitle">Hover over a dot to see who's who. The universe had a plan &mdash; HR just didn't know about it.</p>
+    <div class="wheel-container">
+      <svg class="wheel-svg" viewBox="0 0 500 500" id="zodiacWheel"></svg>
+    </div>
+  </div>
+
+  <!-- TEAM MEMBERS -->
+  <div class="reveal">
+    <h2 class="section-title">The Cast of Characters</h2>
+    <p class="section-subtitle">Click a card for the deep cosmic tea &#x2615;</p>
+    <div class="team-grid" id="teamGrid"></div>
+  </div>
+
+  <!-- SUPERLATIVES -->
+  <div class="reveal">
+    <h2 class="section-title">Cosmic Superlatives</h2>
+    <p class="section-subtitle">Award season, but make it celestial</p>
+    <div class="superlatives-grid" id="superlatives"></div>
+  </div>
+
+  <!-- ELEMENT & MODALITY -->
+  <div class="reveal">
+    <h2 class="section-title">Elemental &amp; Modal Balance</h2>
+    <p class="section-subtitle">Is this team balanced? Let's consult the cosmic pie chart (but make it a bar chart because we're professionals)</p>
+    <div class="breakdown-grid">
+      <div class="breakdown-card">
+        <h3>&#x1f525; Elements</h3>
+        <div id="elementBars"></div>
+        <div class="element-insight" id="elementInsight"></div>
+      </div>
+      <div class="breakdown-card">
+        <h3>&#x1f300; Modalities</h3>
+        <div id="modalityBars"></div>
+        <div class="element-insight" id="modalityInsight"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPATIBILITY -->
+  <div class="reveal">
+    <h2 class="section-title">The Compatibility Matrix</h2>
+    <p class="section-subtitle">Who should share a cubicle and who needs a restraining order (astrologically speaking)</p>
+    <div class="compat-wrapper">
+      <table class="compat-grid" id="compatGrid"></table>
+    </div>
+    <div class="compat-legend">
+      <span><span class="compat-dot" style="background:#6bcb77"></span> Power Duo</span>
+      <span><span class="compat-dot" style="background:#74b9ff"></span> Good Vibes</span>
+      <span><span class="compat-dot" style="background:#888"></span> It's Fine</span>
+      <span><span class="compat-dot" style="background:#ff6b6b"></span> Spicy Tension&#x2122;</span>
+    </div>
+  </div>
+
+  <!-- ADD PERSON -->
+  <div class="reveal">
+    <div class="add-section">
+      <h3>&#x1f52e; Summon Another Soul</h3>
+      <div class="form-row">
+        <input type="text" id="inputName" placeholder="Name (their earth name)">
+        <input type="date" id="inputBirthday" placeholder="Birthday">
+      </div>
+      <div class="form-row">
+        <input type="time" id="inputTime" placeholder="Birth time">
+        <input type="text" id="inputLocation" placeholder="Birth city">
+        <span class="optional-tag" style="align-self:center">optional (but the stars judge you for not knowing)</span>
+      </div>
+      <button class="btn" onclick="addPerson()">&#x2728; Add to the Cosmos</button>
+      <p class="note">Birth time &amp; location unlock Moon &amp; Rising sign data. Without them, you're cosmically basic (Sun sign only).</p>
+    </div>
+  </div>
+
+  <footer>
+    <p>Made with &#x2728; and questionable astronomical accuracy &mdash; <a href="#">Vituity Marketing</a></p>
+    <p style="margin-top:0.5rem">Disclaimer: No hiring or firing decisions should be based on this chart. Probably.</p>
+  </footer>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+// ==================== DATA ====================
+
+const SIGNS = [
+  { name: 'Aries', symbol: '♈', element: 'Fire', modality: 'Cardinal', startMonth: 3, startDay: 21, endMonth: 4, endDay: 19, color: '#e74c3c',
+    blurb: "The one who replies-all within 0.3 seconds and somehow already has an opinion. Pure rocket fuel in human form.",
+    officeRole: "Chief First-Responder",
+    traits: "Bold, competitive, enthusiastic, impatient, honest to a fault",
+    deepDive: "Aries leads with their head (literally, it's their body part). They're the coworker who volunteers for everything, finishes nothing, and somehow still gets promoted. Under stress, they either fix the problem in 5 minutes or set the building on fire. There is no in-between." },
+  { name: 'Taurus', symbol: '♉', element: 'Earth', modality: 'Fixed', startMonth: 4, startDay: 20, endMonth: 5, endDay: 20, color: '#27ae60',
+    blurb: "Will not be rushed. Will not be moved. Will absolutely judge your lunch choice while bringing the best snacks.",
+    officeRole: "Vibes & Snack Director",
+    traits: "Reliable, patient, stubborn, sensual, loyal, hates change",
+    deepDive: "Taurus invented the concept of 'do not disturb.' They're steady, dependable, and will finish every project — just maybe not on your timeline. Change a process they like and watch them become a beautiful, immovable mountain of passive resistance." },
+  { name: 'Gemini', symbol: '♊', element: 'Air', modality: 'Mutable', startMonth: 5, startDay: 21, endMonth: 6, endDay: 20, color: '#3498db',
+    blurb: "Currently in 7 conversations, 4 Slack channels, and somehow winning all of them. Never boring. Occasionally terrifying.",
+    officeRole: "VP of Chaos & Communication",
+    traits: "Witty, adaptable, curious, scattered, great communicator",
+    deepDive: "Geminis contain multitudes — literally, they're the twins. They'll pitch 12 ideas in a meeting (8 are genius, 4 are unhinged) and then completely forget which ones they said out loud. The best brainstorm partner you'll ever have, if you can keep up." },
+  { name: 'Cancer', symbol: '♋', element: 'Water', modality: 'Cardinal', startMonth: 6, startDay: 21, endMonth: 7, endDay: 22, color: '#8e44ad',
+    blurb: "Remembers everyone's birthday, senses when morale is low, has emergency chocolate AND tissues in their desk.",
+    officeRole: "Emotional Intelligence Officer",
+    traits: "Nurturing, intuitive, moody, protective, deeply loyal",
+    deepDive: "Cancer is the coworker who can tell you're having a bad day from the WAY you typed 'ok' in a Teams message. They build teams through sheer emotional wizardry and will go to war for anyone they consider family — which is everyone, eventually." },
+  { name: 'Leo', symbol: '♌', element: 'Fire', modality: 'Fixed', startMonth: 7, startDay: 23, endMonth: 8, endDay: 22, color: '#e74c3c',
+    blurb: "Will hype up your presentation, lead the team cheer, and somehow make a budget review feel like a TED Talk.",
+    officeRole: "Head of Hype & Morale",
+    traits: "Confident, generous, dramatic, warm, needs appreciation",
+    deepDive: "Leos don't walk into rooms — they ARRIVE. They're the natural presenter, the meeting energizer, the person who makes 'good morning' sound like a red carpet moment. Just remember to credit them. They remember when you don't." },
+  { name: 'Virgo', symbol: '♍', element: 'Earth', modality: 'Mutable', startMonth: 8, startDay: 23, endMonth: 9, endDay: 22, color: '#27ae60',
+    blurb: "Found the typo. Optimized the spreadsheet. Is silently reorganizing your entire filing system out of love.",
+    officeRole: "Director of Actually Reading the Doc",
+    traits: "Analytical, perfectionist, helpful, critical, organized",
+    deepDive: "Virgos are the reason anything actually WORKS. While everyone else is vibing, they're fixing the formula, updating the template, and writing the process doc nobody asked for but everyone needs. Perfectionists who are somehow never satisfied, even when they're the best person on the team." },
+  { name: 'Libra', symbol: '♎', element: 'Air', modality: 'Cardinal', startMonth: 9, startDay: 23, endMonth: 10, endDay: 22, color: '#3498db',
+    blurb: "Can mediate any conflict, design anything beautiful, will take 45 minutes to pick a lunch spot. No regrets.",
+    officeRole: "Chief Diplomacy & Aesthetics",
+    traits: "Charming, fair-minded, indecisive, social, harmony-seeking",
+    deepDive: "Libras were born to make things pretty and keep the peace. They're the person who redesigns the slide deck 'real quick' and turns it into a masterpiece. Their kryptonite? Making a decision when both options are equally good. They'll form a committee about it." },
+  { name: 'Scorpio', symbol: '♏', element: 'Water', modality: 'Fixed', startMonth: 10, startDay: 23, endMonth: 11, endDay: 21, color: '#8e44ad',
+    blurb: "Knows everyone's secrets, sees through every bluff, remembers that thing you said in 2019. Uses powers for good (mostly).",
+    officeRole: "Shadow Intelligence Analyst",
+    traits: "Intense, resourceful, secretive, passionate, all-or-nothing",
+    deepDive: "Scorpios operate on a level most people can't see. They're the one who figured out the real reason the reorg happened before anyone announced it. Incredibly loyal, terrifyingly observant. Do NOT make them an enemy. Do make them your strategist." },
+  { name: 'Sagittarius', symbol: '♐', element: 'Fire', modality: 'Mutable', startMonth: 11, startDay: 22, endMonth: 12, endDay: 21, color: '#e74c3c',
+    blurb: "Always pitching the big idea, booking the offsite, and accidentally being BRUTALLY honest in meetings. No notes though.",
+    officeRole: "Chief Vision & Honesty Officer",
+    traits: "Adventurous, optimistic, blunt, philosophical, restless",
+    deepDive: "Sags are the coworkers who make you believe the impossible idea might actually work — and then somehow make it work. They'll also tell you your presentation needs work. To your face. In front of the VP. With love, though. Probably." },
+  { name: 'Capricorn', symbol: '♑', element: 'Earth', modality: 'Cardinal', startMonth: 12, startDay: 22, endMonth: 1, endDay: 19, color: '#27ae60',
+    blurb: "Has a 5-year plan, a backup plan, and a plan for if both plans fail. Already working on next quarter. Respects the grind.",
+    officeRole: "CEO of Having Their Life Together",
+    traits: "Ambitious, disciplined, responsible, reserved, dry humor",
+    deepDive: "Capricorns are the backbone of every team. They're already done with next week's work. Their humor is so dry you need a glass of water afterward. They will outlast, outwork, and out-plan everyone in the room — and look mildly unimpressed while doing it." },
+  { name: 'Aquarius', symbol: '♒', element: 'Air', modality: 'Fixed', startMonth: 1, startDay: 20, endMonth: 2, endDay: 18, color: '#3498db',
+    blurb: "Three steps ahead of everyone, questioning every 'that's how we've always done it,' building the future during your standup.",
+    officeRole: "Head of 'What If We Just...'",
+    traits: "Independent, inventive, humanitarian, rebellious, detached",
+    deepDive: "Aquarians are the reason your team has that one tool nobody else in the company uses but somehow it's the best thing ever. They think in systems, question everything, and have already moved on from the idea you just discovered. They care deeply about everyone but in a big-picture, 'humanity is interesting' kind of way." },
+  { name: 'Pisces', symbol: '♓', element: 'Water', modality: 'Mutable', startMonth: 2, startDay: 19, endMonth: 3, endDay: 20, color: '#8e44ad',
+    blurb: "Feels everything deeply, daydreams through meetings, somehow emerges with the most brilliant idea in the room. Every time.",
+    officeRole: "Creative Mystic & Empath-in-Chief",
+    traits: "Empathetic, artistic, dreamy, intuitive, escapist",
+    deepDive: "Pisces absorbs the energy of every room they enter. They're the creative genius who stares out the window for 20 minutes and then drops an idea that makes everyone go silent. They feel things you didn't even know were feelings. Just don't schedule them for 8 AM meetings — they're still visiting other dimensions." }
+];
+
+const COMPAT_MATRIX = {
+  'Aries':       { 'Aries':'good','Taurus':'challenging','Gemini':'high','Cancer':'challenging','Leo':'high','Virgo':'neutral','Libra':'challenging','Scorpio':'neutral','Sagittarius':'high','Capricorn':'challenging','Aquarius':'good','Pisces':'neutral' },
+  'Taurus':      { 'Aries':'challenging','Taurus':'good','Gemini':'neutral','Cancer':'high','Leo':'challenging','Virgo':'high','Libra':'neutral','Scorpio':'challenging','Sagittarius':'neutral','Capricorn':'high','Aquarius':'challenging','Pisces':'good' },
+  'Gemini':      { 'Aries':'high','Taurus':'neutral','Gemini':'good','Cancer':'neutral','Leo':'good','Virgo':'neutral','Libra':'high','Scorpio':'challenging','Sagittarius':'challenging','Capricorn':'neutral','Aquarius':'high','Pisces':'neutral' },
+  'Cancer':      { 'Aries':'challenging','Taurus':'high','Gemini':'neutral','Cancer':'good','Leo':'neutral','Virgo':'good','Libra':'neutral','Scorpio':'high','Sagittarius':'neutral','Capricorn':'challenging','Aquarius':'challenging','Pisces':'high' },
+  'Leo':         { 'Aries':'high','Taurus':'challenging','Gemini':'good','Cancer':'neutral','Leo':'good','Virgo':'neutral','Libra':'good','Scorpio':'challenging','Sagittarius':'high','Capricorn':'neutral','Aquarius':'challenging','Pisces':'neutral' },
+  'Virgo':       { 'Aries':'neutral','Taurus':'high','Gemini':'neutral','Cancer':'good','Leo':'neutral','Virgo':'good','Libra':'neutral','Scorpio':'good','Sagittarius':'neutral','Capricorn':'high','Aquarius':'neutral','Pisces':'challenging' },
+  'Libra':       { 'Aries':'challenging','Taurus':'neutral','Gemini':'high','Cancer':'neutral','Leo':'good','Virgo':'neutral','Libra':'good','Scorpio':'neutral','Sagittarius':'good','Capricorn':'neutral','Aquarius':'high','Pisces':'neutral' },
+  'Scorpio':     { 'Aries':'neutral','Taurus':'challenging','Gemini':'challenging','Cancer':'high','Leo':'challenging','Virgo':'good','Libra':'neutral','Scorpio':'good','Sagittarius':'neutral','Capricorn':'good','Aquarius':'neutral','Pisces':'high' },
+  'Sagittarius': { 'Aries':'high','Taurus':'neutral','Gemini':'challenging','Cancer':'neutral','Leo':'high','Virgo':'neutral','Libra':'good','Scorpio':'neutral','Sagittarius':'good','Capricorn':'neutral','Aquarius':'good','Pisces':'neutral' },
+  'Capricorn':   { 'Aries':'challenging','Taurus':'high','Gemini':'neutral','Cancer':'challenging','Leo':'neutral','Virgo':'high','Libra':'neutral','Scorpio':'good','Sagittarius':'neutral','Capricorn':'good','Aquarius':'neutral','Pisces':'neutral' },
+  'Aquarius':    { 'Aries':'good','Taurus':'challenging','Gemini':'high','Cancer':'challenging','Leo':'challenging','Virgo':'neutral','Libra':'high','Scorpio':'neutral','Sagittarius':'good','Capricorn':'neutral','Aquarius':'good','Pisces':'neutral' },
+  'Pisces':      { 'Aries':'neutral','Taurus':'good','Gemini':'neutral','Cancer':'high','Leo':'neutral','Virgo':'challenging','Libra':'neutral','Scorpio':'high','Sagittarius':'neutral','Capricorn':'neutral','Aquarius':'neutral','Pisces':'good' }
+};
+
+const COMPAT_BLURBS = {
+  high: [
+    "Absolute dream team. Finish each other's sentences AND presentations.",
+    "Cosmic besties. The universe shipped it.",
+    "Power duo energy. Together they could conquer the quarterly report AND the world.",
+    "This pairing is what astrologers call 'don't break up the band.'"
+  ],
+  good: [
+    "Solid working relationship. The kind of pair that gets stuff done over lunch.",
+    "Good energy! They probably already have inside jokes.",
+    "Natural allies. These two are better together than apart.",
+    "Smooth collaboration vibes. No notes."
+  ],
+  neutral: [
+    "Switzerland. It's fine. It works. Nobody writes fan fiction about it.",
+    "Professional respect with occasional head-tilting.",
+    "They'll work fine together. No fireworks, no fire department needed.",
+    "The astrological equivalent of 'sure, let's grab coffee sometime.'"
+  ],
+  challenging: [
+    "Spicy. The kind of tension that either produces breakthroughs or email threads with HR on CC.",
+    "Growth opportunity! (Translation: they'll annoy each other, but in a productive way. Maybe.)",
+    "Cosmic friction. Channel it into a good cop/bad cop thing and you're golden.",
+    "The universe said 'let's make this interesting' and paired these two."
+  ]
+};
+
+const ELEMENT_COLORS = { Fire: '#e74c3c', Earth: '#27ae60', Air: '#3498db', Water: '#8e44ad' };
+const MODALITY_COLORS = { Cardinal: '#e67e22', Fixed: '#9b59b6', Mutable: '#1abc9c' };
+const ELEMENT_EMOJIS = { Fire: '🔥', Earth: '🌍', Air: '💨', Water: '🌊' };
+const MODALITY_EMOJIS = { Cardinal: '🚀', Fixed: '⚓', Mutable: '🦎' };
+
+const TAGLINES = [
+  "Mercury is in retrograde. Blame everything on it.",
+  "HR didn't approve this page. The stars did.",
+  "More accurate than your personality quiz results. Fight me.",
+  "The cosmos never heard of PTO.",
+  "Your sign can't excuse missing a deadline. Nice try though.",
+  "This chart is legally non-binding but spiritually devastating.",
+  "Astrology: for when the org chart doesn't explain enough.",
+];
+
+function getSign(month, day) {
+  for (const s of SIGNS) {
+    if (s.startMonth > s.endMonth) {
+      if ((month === s.startMonth && day >= s.startDay) || (month === s.endMonth && day <= s.endDay)) return s;
+    } else {
+      if ((month === s.startMonth && day >= s.startDay) || (month === s.endMonth && day <= s.endDay)) return s;
+    }
+  }
+  return SIGNS[0];
+}
+
+let team = [
+  {
+    name: 'Ryan Birdsall',
+    birthday: '1997-02-06',
+    birthTime: '5:00 PM',
+    birthLocation: 'Sacramento, CA',
+    hasFullChart: true,
+    planets: {
+      'Sun': { sign: 'Aquarius', degree: '17°14′' },
+      'Moon': { sign: 'Aquarius', degree: '~8°' },
+      'Rising': { sign: 'Cancer', degree: '~22°' },
+      'Mercury': { sign: 'Capricorn', degree: '25°25′' },
+      'Venus': { sign: 'Aquarius', degree: '3°31′' },
+      'Mars': { sign: 'Libra', degree: '5°55′ ℞' },
+      'Jupiter': { sign: 'Aquarius', degree: '3°36′' },
+      'Saturn': { sign: 'Aries', degree: '4°05′' },
+      'Uranus': { sign: 'Aquarius', degree: '5°21′' },
+      'Neptune': { sign: 'Capricorn', degree: '28°11′' },
+      'Pluto': { sign: 'Sagittarius', degree: '5°20′' }
+    },
+    specialNotes: [
+      '✨ Massive Aquarius Stellium: Sun, Moon, Venus, Jupiter & Uranus all in Aquarius — this is rare and powerful. You are PEAK Aquarius. The other Aquarians look at you and go "whoa, dial it back."',
+      '♋ Cancer Rising: Warm, approachable exterior that balances all that Aquarian independence. People feel safe around you immediately, even when you’re mentally redesigning their workflow.',
+      '♂ Mars Retrograde in Libra: You think before you fight, which is annoyingly mature. Conflict style: diplomatic but deadly.',
+      '♄ Saturn in Aries: The "late bloomer who becomes unstoppable" placement. Your 30s are going to be WILD (in a leadership way).',
+      '🔥 Chinese Zodiac: Fire Rat — charismatic, industrious, persuasive. Yes, that tracks.'
+    ]
+  },
+  {
+    name: 'Julia Ogburn',
+    birthday: '1991-03-01',
+    birthTime: '3:08 AM',
+    birthLocation: 'Seattle, WA',
+    hasFullChart: true,
+    planets: {
+      'Sun': { sign: 'Pisces', degree: '10°23′' },
+      'Moon': { sign: 'Virgo', degree: '14°50′' },
+      'Rising': { sign: 'Sagittarius', degree: '~5°' },
+      'Mercury': { sign: 'Pisces', degree: '9°16′' },
+      'Venus': { sign: 'Aries', degree: '8°09′' },
+      'Mars': { sign: 'Gemini', degree: '13°41′' },
+      'Jupiter': { sign: 'Leo', degree: '4°55′ ℞' },
+      'Saturn': { sign: 'Aquarius', degree: '2°26′' },
+      'Uranus': { sign: 'Capricorn', degree: '12°50′' },
+      'Neptune': { sign: 'Capricorn', degree: '16°07′' },
+      'Pluto': { sign: 'Scorpio', degree: '20°21′ ℞' }
+    },
+    specialNotes: [
+      '🌕 Born on a Full Moon in Virgo — Sun in Pisces opposite Moon in Virgo. She’s got one foot in a dream and the other in a spreadsheet. It’s actually her superpower.',
+      '♐ Sagittarius Rising: First impression is "this person is going to take me on an adventure." And she will.',
+      '☸ Mercury conjunct Sun in Pisces: She doesn’t just communicate — she downloads directly from the vibes. Reads the room before the room knows it has a vibe.',
+      '♀ Venus in Aries: Bold taste, decisive in matters of the heart and aesthetics. Doesn’t dither over font choices.',
+      '♂ Mars in Gemini: Mental energy for DAYS. Juggles projects like a circus performer who also has opinions.',
+      '♃ Jupiter Retrograde in Leo: Quiet confidence that builds over time. The kind of leader people follow because they want to, not because the org chart says so.',
+      '🐐 Chinese Zodiac: Metal Goat — artistic, compassionate, elegant, and tougher than she looks.'
+    ]
+  },
+  {
+    name: 'Rebecca Healy',
+    birthday: '1983-08-29',
+    birthTime: '3:40 PM',
+    birthLocation: 'Urbana, IL',
+    hasFullChart: true,
+    planets: {
+      'Sun': { sign: 'Virgo', degree: '5°47′' },
+      'Moon': { sign: 'Gemini', degree: '~0°' },
+      'Rising': { sign: 'Capricorn', degree: '~6°' },
+      'Mercury': { sign: 'Virgo', degree: '29°18′' },
+      'Venus': { sign: 'Leo', degree: '27°12′ ℞' },
+      'Mars': { sign: 'Leo', degree: '11°04′' },
+      'Jupiter': { sign: 'Sagittarius', degree: '2°15′' },
+      'Saturn': { sign: 'Scorpio', degree: '0°22′' },
+      'Uranus': { sign: 'Sagittarius', degree: '5°10′ ℞' },
+      'Neptune': { sign: 'Sagittarius', degree: '26°18′ ℞' },
+      'Pluto': { sign: 'Libra', degree: '27°20′' }
+    },
+    specialNotes: [
+      '♍ Sun in Virgo with Mercury in late Virgo: Double Virgo brain. She notices EVERYTHING. The typo, the misaligned column, the vibe shift in the room. Nothing gets past this one.',
+      '♊ Gemini Moon (barely): The Moon literally JUST entered Gemini 53 minutes before she was born. Emotionally curious, needs mental stimulation, processes feelings by talking them out.',
+      '♑ Capricorn Rising: Shows up looking like she has it all together. Spoiler: she actually does. Professional first impression with hidden depth.',
+      '♀ Venus Retrograde in Leo: Love and aesthetics run deep and dramatic. Has very specific taste and zero patience for mediocrity. If she says something looks good — BELIEVE HER.',
+      '♂ Mars in Leo: When she goes for something, she goes BIG. Passionate executor who brings creative fire to every project.',
+      '♃ Jupiter in Sagittarius: Lucky in learning and travel. The person who somehow finds the perfect opportunity at the perfect time.',
+      '🐷 Chinese Zodiac: Water Pig — generous, compassionate, diligent, and way more strategic than people expect.'
+    ]
+  },
+  {
+    name: 'Hilary',
+    birthday: '1990-03-25',
+    birthTime: '8:00 AM',
+    birthLocation: 'Detroit, MI',
+    hasFullChart: true,
+    planets: {
+      'Sun': { sign: 'Aries', degree: '4°22′' },
+      'Moon': { sign: 'Pisces', degree: '~25°' },
+      'Rising': { sign: 'Taurus', degree: '~13°' },
+      'Mercury': { sign: 'Aries', degree: '~6°' },
+      'Venus': { sign: 'Aquarius', degree: '~13°' },
+      'Mars': { sign: 'Aquarius', degree: '~8°' },
+      'Jupiter': { sign: 'Cancer', degree: '1°05′' },
+      'Saturn': { sign: 'Capricorn', degree: '23°10′' },
+      'Uranus': { sign: 'Capricorn', degree: '9°05′' },
+      'Neptune': { sign: 'Capricorn', degree: '14°02′' },
+      'Pluto': { sign: 'Scorpio', degree: '17°08′' }
+    },
+    specialNotes: [
+      '♈ Aries Sun + Aries Mercury: Double Aries brain — thinks fast, speaks faster. The person who already has the answer before you finish the question. Direct communication is an UNDERSTATEMENT.',
+      '♓ Pisces Moon: Secret softie alert. Under all that Aries fire is a deeply intuitive, empathetic emotional core. She FEELS things, she just processes them at Aries speed.',
+      '♉ Taurus Rising: First impression is calm, grounded, and put-together — which is hilarious because inside it\'s pure Aries chaos. The ultimate "I\'m fine" energy.',
+      '♀♂ Venus AND Mars in Aquarius: Unconventional in both love and action. Does things her own way, on her own timeline, and somehow it works every single time.',
+      '🌑 Born on a Waning Crescent — one day before a New Moon in Aries. Endings-into-beginnings energy. She is literally built for fresh starts and reinvention.',
+      '♄ Capricorn Stellium (Saturn, Uranus, Neptune): Generational powerhouse placement — the "tear it down and rebuild it better" generation. Structure meets revolution.',
+      '🐴 Chinese Zodiac: Metal Horse — independent, energetic, sharp-minded, and absolutely will not be fenced in.'
+    ]
+  }
+];
+
+// ==================== RENDERING ====================
+
+function render() {
+  renderTeamGrid();
+  renderWheel();
+  renderBreakdowns();
+  renderCompatGrid();
+  renderSuperlatives();
+  animateBars();
+}
+
+function renderTeamGrid() {
+  const grid = document.getElementById('teamGrid');
+  grid.innerHTML = '';
+  team.forEach((person, i) => {
+    const d = new Date(person.birthday + 'T12:00:00');
+    const sign = getSign(d.getMonth() + 1, d.getDate());
+    const el = sign.element.toLowerCase();
+    const card = document.createElement('div');
+    card.className = `person-card ${el}`;
+    card.style.animationDelay = `${i * 0.1}s`;
+    card.onclick = () => openModal(i);
+
+    let detailsHtml = `<span>☀ Sun: ${sign.name}</span>`;
+    if (person.planets && person.planets['Moon']) detailsHtml += `<span>☽ Moon: ${person.planets['Moon'].sign}</span>`;
+    if (person.planets && person.planets['Rising']) detailsHtml += `<span>⬆ Rising: ${person.planets['Rising'].sign}</span>`;
+    detailsHtml += `<span>✷ ${sign.element} · ${sign.modality}</span>`;
+
+    card.innerHTML = `
+      <div class="element-stripe"></div>
+      <div class="glow"></div>
+      <div class="symbol">${sign.symbol}</div>
+      <div class="name">${person.name}</div>
+      <div class="sun-sign">${sign.name}</div>
+      <div class="office-role">${sign.officeRole}</div>
+      <div class="details">${detailsHtml}</div>
+      <div class="blurb">"${sign.blurb}"</div>
+      <div class="birthday">${d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} • ${person.birthTime || 'time unknown'} • ${person.birthLocation || 'location unknown'}</div>
+      <div class="click-hint">Click for the full cosmic download →</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function openModal(index) {
+  const person = team[index];
+  const d = new Date(person.birthday + 'T12:00:00');
+  const sign = getSign(d.getMonth() + 1, d.getDate());
+  const modal = document.getElementById('modalContent');
+
+  let html = `<button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('active')">&times;</button>`;
+  html += `<div style="text-align:center;font-size:4rem;margin-bottom:0.5rem">${sign.symbol}</div>`;
+  html += `<h2 style="text-align:center">${person.name}</h2>`;
+  html += `<p style="text-align:center;color:var(--text-muted);margin-bottom:0.5rem">${d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+  if (person.birthTime) html += ` · ${person.birthTime}`;
+  if (person.birthLocation) html += ` · ${person.birthLocation}`;
+  html += `</p>`;
+  html += `<p style="text-align:center;margin-bottom:1.5rem"><span class="office-role">${sign.officeRole}</span></p>`;
+
+  // Big Three
+  if (person.planets) {
+    html += `<div class="big-three">`;
+    html += `<div class="big-three-item"><div class="label">☀ Sun</div><div class="value">${person.planets['Sun']?.sign || sign.name}</div></div>`;
+    html += `<div class="big-three-item"><div class="label">☽ Moon</div><div class="value">${person.planets['Moon']?.sign || '???'}</div></div>`;
+    html += `<div class="big-three-item"><div class="label">⬆ Rising</div><div class="value">${person.planets['Rising']?.sign || '???'}</div></div>`;
+    html += `</div>`;
+  }
+
+  html += `<p style="font-style:italic;text-align:center;margin:1.5rem 0;color:var(--accent);font-size:1.05rem">"${sign.blurb}"</p>`;
+  html += `<p style="margin-bottom:0.5rem"><strong>Key traits:</strong> ${sign.traits}</p>`;
+  html += `<p style="margin-bottom:1.5rem;color:var(--text-muted);font-size:0.9rem;line-height:1.6">${sign.deepDive}</p>`;
+
+  if (person.planets) {
+    html += `<h3 style="font-family:Cinzel;color:var(--accent);font-size:1.1rem;margin-bottom:0.5rem">🌌 Full Planetary Lineup</h3>`;
+    html += `<table class="planet-table"><thead><tr><th>Planet</th><th>Sign</th><th>Position</th></tr></thead><tbody>`;
+    const planetSymbols = { Sun:'☉', Moon:'☽', Rising:'⬆', Mercury:'☿', Venus:'♀', Mars:'♂', Jupiter:'♃', Saturn:'♄', Uranus:'♅', Neptune:'♆', Pluto:'♇' };
+    for (const [planet, data] of Object.entries(person.planets)) {
+      html += `<tr><td>${planetSymbols[planet] || ''} ${planet}</td><td>${data.sign}</td><td>${data.degree}</td></tr>`;
+    }
+    html += `</tbody></table>`;
+  }
+
+  if (person.specialNotes) {
+    html += `<div style="margin-top:1.5rem"><h3 style="font-family:Cinzel;color:var(--accent);font-size:1.1rem;margin-bottom:0.75rem">🔮 Chart Highlights</h3><ul style="padding-left:0;list-style:none">`;
+    person.specialNotes.forEach(n => html += `<li style="margin-bottom:0.75rem;font-size:0.9rem;line-height:1.6;padding:0.5rem 0.75rem;background:rgba(201,160,255,0.05);border-radius:8px;border-left:3px solid var(--accent)">${n}</li>`);
+    html += `</ul></div>`;
+  }
+
+  html += `<div style="text-align:center;margin-top:2rem"><button class="btn btn-small btn-danger" onclick="removePerson(${index})">Remove from the Cosmos</button></div>`;
+
+  modal.innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('active');
+  }
+}
+
+function removePerson(index) {
+  team.splice(index, 1);
+  document.getElementById('modalOverlay').classList.remove('active');
+  render();
+  saveTeam();
+}
+
+function renderWheel() {
+  const svg = document.getElementById('zodiacWheel');
+  const cx = 250, cy = 250, outerR = 215, innerR = 150, nameR = 120;
+  let html = '';
+
+  html += `<defs>
+    <filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <radialGradient id="centerGrad"><stop offset="0%" stop-color="#1a1a3e"/><stop offset="100%" stop-color="var(--bg)"/></radialGradient>
+  </defs>`;
+
+  SIGNS.forEach((sign, i) => {
+    const startAngle = (i * 30 - 90) * Math.PI / 180;
+    const endAngle = ((i + 1) * 30 - 90) * Math.PI / 180;
+    const midAngle = ((i + 0.5) * 30 - 90) * Math.PI / 180;
+
+    const x1o = cx + outerR * Math.cos(startAngle), y1o = cy + outerR * Math.sin(startAngle);
+    const x2o = cx + outerR * Math.cos(endAngle), y2o = cy + outerR * Math.sin(endAngle);
+    const x1i = cx + innerR * Math.cos(startAngle), y1i = cy + innerR * Math.sin(startAngle);
+    const x2i = cx + innerR * Math.cos(endAngle), y2i = cy + innerR * Math.sin(endAngle);
+
+    const elColor = ELEMENT_COLORS[sign.element];
+    html += `<path d="M${x1i},${y1i} L${x1o},${y1o} A${outerR},${outerR} 0 0,1 ${x2o},${y2o} L${x2i},${y2i} A${innerR},${innerR} 0 0,0 ${x1i},${y1i}" fill="${elColor}" opacity="0.12" stroke="${elColor}" stroke-width="0.5" style="cursor:pointer">
+      <title>${sign.name} (${sign.element})</title></path>`;
+
+    const symX = cx + ((outerR + innerR) / 2) * Math.cos(midAngle);
+    const symY = cy + ((outerR + innerR) / 2) * Math.sin(midAngle);
+    html += `<text x="${symX}" y="${symY}" text-anchor="middle" dominant-baseline="central" fill="${elColor}" font-size="22" style="pointer-events:none">${sign.symbol}</text>`;
+
+    const labelR = outerR + 18;
+    const lx = cx + labelR * Math.cos(midAngle);
+    const ly = cy + labelR * Math.sin(midAngle);
+    const rotation = (i * 30 + 15 - 90);
+    const textRotation = rotation > 90 && rotation < 270 ? rotation + 180 : rotation;
+    html += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="var(--text-muted)" font-size="9" font-family="Cinzel" transform="rotate(${textRotation},${lx},${ly})" style="pointer-events:none">${sign.name}</text>`;
+  });
+
+  // Connection lines between compatible people
+  const positions = [];
+  team.forEach((person, pi) => {
+    const d = new Date(person.birthday + 'T12:00:00');
+    const sign = getSign(d.getMonth() + 1, d.getDate());
+    const signIndex = SIGNS.findIndex(s => s.name === sign.name);
+    const dayInSign = getDayInSign(d, sign);
+    const fraction = dayInSign / 30;
+    const angle = ((signIndex + fraction) * 30 - 90) * Math.PI / 180;
+    positions.push({ x: cx + nameR * Math.cos(angle), y: cy + nameR * Math.sin(angle), sign: sign.name, name: person.name });
+  });
+
+  for (let i = 0; i < positions.length; i++) {
+    for (let j = i + 1; j < positions.length; j++) {
+      const level = COMPAT_MATRIX[positions[i].sign]?.[positions[j].sign];
+      if (level === 'high') {
+        html += `<line x1="${positions[i].x}" y1="${positions[i].y}" x2="${positions[j].x}" y2="${positions[j].y}" stroke="rgba(107,203,119,0.3)" stroke-width="1.5" stroke-dasharray="4,4" filter="url(#glow)"/>`;
+      }
+    }
+  }
+
+  // Plot people
+  positions.forEach((pos, pi) => {
+    const person = team[pi];
+    const d = new Date(person.birthday + 'T12:00:00');
+    const sign = getSign(d.getMonth() + 1, d.getDate());
+    const dotColor = ELEMENT_COLORS[sign.element];
+
+    html += `<circle cx="${pos.x}" cy="${pos.y}" r="8" fill="${dotColor}" stroke="white" stroke-width="2" filter="url(#glow)" style="cursor:pointer"
+      onmouseover="showTooltip(event, '${person.name}', '${sign.symbol} ${sign.name}', '${sign.officeRole}')"
+      onmouseout="hideTooltip()" onclick="openModal(${pi})"/>`;
+    const firstName = person.name.split(' ')[0];
+    html += `<text x="${pos.x}" y="${pos.y - 15}" text-anchor="middle" fill="var(--text)" font-size="10" font-weight="600" style="pointer-events:none;text-shadow:0 0 8px rgba(0,0,0,0.8)">${firstName}</text>`;
+  });
+
+  html += `<circle cx="${cx}" cy="${cy}" r="45" fill="url(#centerGrad)" stroke="var(--border)" stroke-width="1"/>`;
+  html += `<text x="${cx}" y="${cy - 8}" text-anchor="middle" fill="var(--accent)" font-family="Cinzel" font-size="11">VITUITY</text>`;
+  html += `<text x="${cx}" y="${cy + 8}" text-anchor="middle" fill="var(--text-muted)" font-size="8">MARKETING</text>`;
+  html += `<text x="${cx}" y="${cy + 22}" text-anchor="middle" fill="var(--gold)" font-size="7">${team.length} SOULS</text>`;
+
+  svg.innerHTML = html;
+}
+
+function getDayInSign(date, sign) {
+  const m = date.getMonth() + 1, d = date.getDate();
+  if (m === sign.startMonth) return d - sign.startDay;
+  return 15;
+}
+
+function renderBreakdowns() {
+  const elements = { Fire: 0, Earth: 0, Air: 0, Water: 0 };
+  const modalities = { Cardinal: 0, Fixed: 0, Mutable: 0 };
+
+  team.forEach(person => {
+    const d = new Date(person.birthday + 'T12:00:00');
+    const sign = getSign(d.getMonth() + 1, d.getDate());
+    elements[sign.element]++;
+    modalities[sign.modality]++;
+  });
+
+  const total = team.length || 1;
+
+  let elHtml = '';
+  for (const [el, count] of Object.entries(elements)) {
+    const pct = Math.round((count / total) * 100);
+    elHtml += `<div class="bar-row">
+      <div class="bar-label"><span class="bar-emoji">${ELEMENT_EMOJIS[el]}</span> ${el}</div>
+      <div class="bar-track"><div class="bar-fill" data-width="${pct}" style="width:0;background:${ELEMENT_COLORS[el]}">${pct > 0 ? pct + '%' : ''}</div></div>
+      <div class="bar-count">${count}</div>
+    </div>`;
+  }
+  document.getElementById('elementBars').innerHTML = elHtml;
+
+  // Element insight
+  const dominant = Object.entries(elements).sort((a,b) => b[1] - a[1])[0];
+  const missing = Object.entries(elements).filter(([,v]) => v === 0).map(([k]) => k);
+  let insight = '';
+  if (team.length >= 2) {
+    const insights = {
+      Fire: "This team runs HOT. Expect big ideas, bold moves, and at least one 'reply-all' incident per quarter.",
+      Earth: "Grounded crew. Projects get DONE. Just don't try to change the process without a 3-week lead time.",
+      Air: "Ideas flowing like oxygen. This team could brainstorm for DAYS. Execution? That's a tomorrow problem.",
+      Water: "Emotionally intelligent squad. They FEEL the quarterly results before they see them."
+    };
+    insight = `<strong>${dominant[0]}-dominant team:</strong> ${insights[dominant[0]]}`;
+    if (missing.length) insight += ` <br><strong>Missing ${missing.join(' & ')}:</strong> You might want to recruit a ${missing.join(' or ')} sign for balance. Just saying.`;
+  }
+  document.getElementById('elementInsight').innerHTML = insight;
+
+  let modHtml = '';
+  for (const [mod, count] of Object.entries(modalities)) {
+    const pct = Math.round((count / total) * 100);
+    modHtml += `<div class="bar-row">
+      <div class="bar-label"><span class="bar-emoji">${MODALITY_EMOJIS[mod]}</span> ${mod}</div>
+      <div class="bar-track"><div class="bar-fill" data-width="${pct}" style="width:0;background:${MODALITY_COLORS[mod]}">${pct > 0 ? pct + '%' : ''}</div></div>
+      <div class="bar-count">${count}</div>
+    </div>`;
+  }
+  document.getElementById('modalityBars').innerHTML = modHtml;
+
+  const modDominant = Object.entries(modalities).sort((a,b) => b[1] - a[1])[0];
+  const modInsights = {
+    Cardinal: "Starter energy EVERYWHERE. This team launches projects like SpaceX launches rockets. Landing them is another conversation.",
+    Fixed: "This team does NOT quit. Stubborn? Call it ‘committed.’ Good luck pivoting though.",
+    Mutable: "Flexible AF. This team adapts to anything. Pinning them down on a final decision? Good luck with that."
+  };
+  let modInsight = team.length >= 2 ? `<strong>${modDominant[0]}-dominant:</strong> ${modInsights[modDominant[0]]}` : '';
+  document.getElementById('modalityInsight').innerHTML = modInsight;
+}
+
+function animateBars() {
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.width + '%';
+    });
+  }, 300);
+}
+
+function renderCompatGrid() {
+  if (team.length < 2) {
+    document.getElementById('compatGrid').innerHTML = '<tr><td style="padding:2rem;color:var(--text-muted);font-style:italic">Add at least 2 people to unlock the drama matrix 🎭</td></tr>';
+    return;
+  }
+
+  const labels = { high: '❤️', good: '💚', neutral: '➖', challenging: '⚡' };
+  const classes = { high: 'compat-high', good: 'compat-good', neutral: 'compat-neutral', challenging: 'compat-challenging' };
+
+  let html = '<thead><tr><th></th>';
+  team.forEach(p => html += `<th>${p.name.split(' ')[0]}</th>`);
+  html += '</tr></thead><tbody>';
+
+  team.forEach((p1, i) => {
+    const d1 = new Date(p1.birthday + 'T12:00:00');
+    const s1 = getSign(d1.getMonth() + 1, d1.getDate()).name;
+    html += `<tr><th>${p1.name.split(' ')[0]}</th>`;
+    team.forEach((p2, j) => {
+      if (i === j) {
+        html += `<td class="compat-self">⭐</td>`;
+      } else {
+        const d2 = new Date(p2.birthday + 'T12:00:00');
+        const s2 = getSign(d2.getMonth() + 1, d2.getDate()).name;
+        const level = COMPAT_MATRIX[s1][s2];
+        const blurbs = COMPAT_BLURBS[level];
+        const blurb = blurbs[Math.abs(i * 7 + j * 13) % blurbs.length];
+        html += `<td class="${classes[level]}"
+          onmouseover="showTooltip(event, '${p1.name.split(' ')[0]} + ${p2.name.split(' ')[0]}', '${s1} × ${s2}', '${blurb.replace(/'/g, "\\'")}')"
+          onmouseout="hideTooltip()">${labels[level]}</td>`;
+      }
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('compatGrid').innerHTML = html;
+}
+
+function renderSuperlatives() {
+  const container = document.getElementById('superlatives');
+  if (team.length < 2) {
+    container.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-style:italic">Add more people to unlock cosmic superlatives 🏆</p>';
+    return;
+  }
+
+  const awards = [];
+  const signs = team.map(p => {
+    const d = new Date(p.birthday + 'T12:00:00');
+    return { person: p, sign: getSign(d.getMonth() + 1, d.getDate()) };
+  });
+
+  const signAwards = {
+    'Aries': { emoji: '🚀', title: 'Most Likely to Reply-All First', reason: 'Fastest fingers in the west' },
+    'Taurus': { emoji: '🍽️', title: 'Best Office Snacks', reason: 'Prioritizes the important things' },
+    'Gemini': { emoji: '🗣️', title: 'Most Slack Channels Joined', reason: 'FOMO is their love language' },
+    'Cancer': { emoji: '🫢', title: 'Most Likely to Check In On You', reason: 'Felt a disturbance in your vibes' },
+    'Leo': { emoji: '🎬', title: 'Best All-Hands Presentation', reason: 'Born for the spotlight' },
+    'Virgo': { emoji: '🔍', title: 'First to Find the Bug', reason: 'Their eye twitches near typos' },
+    'Libra': { emoji: '🎨', title: 'Best Slide Deck Aesthetics', reason: 'Form AND function' },
+    'Scorpio': { emoji: '🕵️', title: 'Knows Everyone\'s Secrets', reason: 'Information just... finds them' },
+    'Sagittarius': { emoji: '🤭', title: 'Most Accidentally Honest', reason: 'Filter? What filter?' },
+    'Capricorn': { emoji: '📊', title: 'Most Organized Human Alive', reason: 'Their calendar has a calendar' },
+    'Aquarius': { emoji: '🧠', title: 'Most Likely to Automate Their Job', reason: 'Why do it twice when a robot could do it forever?' },
+    'Pisces': { emoji: '🌙', title: 'Best Ideas from Daydreaming', reason: 'Their best work happens while staring out windows' }
+  };
+
+  signs.forEach(({ person, sign }) => {
+    const award = signAwards[sign.name];
+    if (award) {
+      awards.push({ ...award, name: person.name.split(' ')[0] });
+    }
+  });
+
+  // Team dynamic awards
+  if (signs.length >= 2) {
+    const fireCount = signs.filter(s => s.sign.element === 'Fire').length;
+    const waterCount = signs.filter(s => s.sign.element === 'Water').length;
+    if (fireCount > 0 && waterCount > 0) {
+      awards.push({ emoji: '♨️', title: 'Steam Factory', name: 'The Team', reason: 'Fire meets Water = pressure cooker of productivity' });
+    }
+  }
+
+  container.innerHTML = awards.map(a => `
+    <div class="superlative-card">
+      <div class="award">${a.emoji}</div>
+      <div class="award-title">${a.title}</div>
+      <div class="award-name">${a.name}</div>
+      <div class="award-reason">${a.reason}</div>
+    </div>
+  `).join('');
+}
+
+// ==================== TOOLTIP ====================
+
+function showTooltip(e, title, subtitle, detail) {
+  const tt = document.getElementById('tooltip');
+  tt.innerHTML = `<div class="tt-title">${title}</div><div style="color:var(--text-muted);font-size:0.8rem;margin-bottom:0.25rem">${subtitle}</div><div>${detail}</div>`;
+  tt.classList.add('visible');
+  positionTooltip(e);
+}
+
+function positionTooltip(e) {
+  const tt = document.getElementById('tooltip');
+  let x = e.clientX + 15, y = e.clientY + 15;
+  if (x + 300 > window.innerWidth) x = e.clientX - 300;
+  if (y + 150 > window.innerHeight) y = e.clientY - 150;
+  tt.style.left = x + 'px';
+  tt.style.top = y + 'px';
+}
+
+function hideTooltip() {
+  document.getElementById('tooltip').classList.remove('visible');
+}
+
+document.addEventListener('mousemove', (e) => {
+  if (document.getElementById('tooltip').classList.contains('visible')) positionTooltip(e);
+});
+
+// ==================== ADD / SAVE ====================
+
+function addPerson() {
+  const name = document.getElementById('inputName').value.trim();
+  const birthday = document.getElementById('inputBirthday').value;
+  if (!name || !birthday) { alert('The cosmos requires at least a name and birthday.'); return; }
+
+  const time = document.getElementById('inputTime').value || null;
+  const location = document.getElementById('inputLocation').value.trim() || null;
+
+  team.push({ name, birthday, birthTime: time, birthLocation: location, hasFullChart: false });
+
+  document.getElementById('inputName').value = '';
+  document.getElementById('inputBirthday').value = '';
+  document.getElementById('inputTime').value = '';
+  document.getElementById('inputLocation').value = '';
+
+  spawnConfetti();
+  render();
+  saveTeam();
+}
+
+function spawnConfetti() {
+  const emojis = ['✨', '⭐', '🌟', '🔮', '❤️', '🌙', '☀️', '🌌'];
+  for (let i = 0; i < 20; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = (Math.random() * 80 + 10) + '%';
+    el.style.top = (Math.random() * 30 + 20) + '%';
+    el.style.animationDelay = (Math.random() * 0.5) + 's';
+    el.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+  }
+}
+
+const DATA_VERSION = 4;
+
+function saveTeam() {
+  try {
+    localStorage.setItem('vituity-astro-team', JSON.stringify(team));
+    localStorage.setItem('vituity-astro-version', DATA_VERSION);
+  } catch(e) {}
+}
+
+function loadTeam() {
+  try {
+    const savedVersion = parseInt(localStorage.getItem('vituity-astro-version') || '0');
+    if (savedVersion >= DATA_VERSION) {
+      const saved = localStorage.getItem('vituity-astro-team');
+      if (saved) team = JSON.parse(saved);
+    } else {
+      localStorage.removeItem('vituity-astro-team');
+      saveTeam();
+    }
+  } catch(e) {}
+}
+
+// ==================== STARS & EFFECTS ====================
+
+function createStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 200; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    star.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${Math.random()*4+1}s;animation-delay:${Math.random()*4}s`;
+    container.appendChild(star);
+  }
+}
+
+function shootingStar() {
+  const el = document.createElement('div');
+  el.className = 'shooting-star';
+  el.style.left = (Math.random() * 80 + 10) + '%';
+  el.style.top = (Math.random() * 40) + '%';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2000);
+}
+
+setInterval(shootingStar, 4000 + Math.random() * 6000);
+
+// Scroll reveal
+function revealOnScroll() {
+  document.querySelectorAll('.reveal').forEach(el => {
+    const top = el.getBoundingClientRect().top;
+    if (top < window.innerHeight - 50) el.classList.add('visible');
+  });
+}
+window.addEventListener('scroll', revealOnScroll);
+
+// Random tagline
+function setTagline() {
+  document.getElementById('tagline').textContent = TAGLINES[Math.floor(Math.random() * TAGLINES.length)];
+}
+
+// Keyboard shortcut to close modal
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.getElementById('modalOverlay').classList.remove('active');
+});
+
+// ==================== INIT ====================
+
+createStars();
+loadTeam();
+setTagline();
+render();
+setTimeout(revealOnScroll, 100);
+setTimeout(shootingStar, 2000);
+</script>
+</body>
+</html>
