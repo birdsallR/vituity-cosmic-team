@@ -739,7 +739,7 @@ let team = [
 ];
 
 function label(person) {
-  return person.shortName || label(person);
+  return person.shortName || person.name.split(' ')[0];
 }
 
 // ==================== RENDERING ====================
