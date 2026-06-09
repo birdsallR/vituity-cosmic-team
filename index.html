@@ -593,6 +593,7 @@ let team = [
   },
   {
     name: 'Julia Ogburn',
+    shortName: 'Julia O.',
     birthday: '1991-03-01',
     birthTime: '3:08 AM',
     birthLocation: 'Seattle, WA',
@@ -678,16 +679,32 @@ let team = [
     ]
   },
   {
-    name: 'Julia P',
+    name: 'Julia Poluch',
+    shortName: 'Julia P.',
     birthday: '1997-05-28',
     birthTime: '11:00 PM',
     birthLocation: 'Aston, PA',
-    hasFullChart: false,
-    planets: null,
+    hasFullChart: true,
+    planets: {
+      'Sun': { sign: 'Gemini', degree: '7°33′' },
+      'Moon': { sign: 'Pisces', degree: '~8°' },
+      'Rising': { sign: 'Cancer', degree: '~17°' },
+      'Mercury': { sign: 'Taurus', degree: '~24°' },
+      'Venus': { sign: 'Gemini', degree: '~21°' },
+      'Mars': { sign: 'Virgo', degree: '~21°' },
+      'Jupiter': { sign: 'Aquarius', degree: '~11°' },
+      'Saturn': { sign: 'Aries', degree: '~8°' },
+      'Uranus': { sign: 'Aquarius', degree: '~6° ℞' },
+      'Neptune': { sign: 'Capricorn', degree: '~28°50′' },
+      'Pluto': { sign: 'Sagittarius', degree: '~5° ℞' }
+    },
     specialNotes: [
-      '♊ Sun in Gemini: The person who\'s already on slide 12 while you\'re still reading the title. Gemini processes faster, talks faster, and pivots faster than anyone else in the room — and somehow it all lands.',
-      '✨ Born late at night: Night births are associated with introspection and inner life beneath the social exterior. Don\'t let the Gemini charm fool you — there\'s a whole universe going on inside.',
-      '🌟 Pull the full chart at astro.com with birth date, time (11 PM), and Aston, PA to unlock Moon, Rising & planetary placements!'
+      '♊ Sun + Venus in Gemini: Double Gemini energy in the chart\'s most personal placements — she is the idea, AND the charm. Communicates on multiple levels simultaneously, adapts to any room, and makes it all look effortless. The person who makes you feel like you\'re the only one she\'s talking to, even when she\'s juggling five conversations.',
+      '♉ Mercury in Taurus: Here\'s the twist — behind all that Gemini spark lives a Mercury that slows down, chews on ideas, and doesn\'t move until it\'s sure. She might change her mind, but she won\'t rush it. The combo is devastating: quick-witted delivery, deeply considered substance.',
+      '♓ Moon in Pisces: Emotional intelligence that operates more like a sonar system than a radar. She picks up on what\'s unsaid in a room before most people notice there was anything to say. Feels things deeply and creatively — probably processes stress through music, art, or a very long shower with a very good playlist.',
+      '♋ Cancer Rising: Warm, welcoming first impression — people feel immediately at ease around her without knowing why. It\'s the shell, though. Under Cancer Rising + Pisces Moon + Gemini Sun lives a genuinely complex interior. She lets you in, but it\'s on her terms.',
+      '♂ Mars in Virgo: Executes. When she takes something on, it\'s done right, done thoroughly, and done on time. No fanfare, just results. Mars in Virgo doesn\'t need applause — the quality of the work IS the applause.',
+      '🐂 Chinese Zodiac: Fire Ox — determined, magnetic, works harder than anyone in the room, and has the kind of persistence that looks effortless because she never makes a scene about it. The Fire element adds spark and charisma to the Ox\'s legendary reliability. Basically: she will outlast you. Warmly.'
     ]
   },
   {
@@ -720,6 +737,10 @@ let team = [
     ]
   }
 ];
+
+function label(person) {
+  return person.shortName || label(person);
+}
 
 // ==================== RENDERING ====================
 
@@ -895,7 +916,7 @@ function renderWheel() {
     html += `<circle cx="${pos.x}" cy="${pos.y}" r="8" fill="${dotColor}" stroke="white" stroke-width="2" filter="url(#glow)" style="cursor:pointer"
       onmouseover="showTooltip(event, '${person.name}', '${sign.symbol} ${sign.name}', '${sign.officeRole}')"
       onmouseout="hideTooltip()" onclick="openModal(${pi})"/>`;
-    const firstName = person.name.split(' ')[0];
+    const firstName = label(person);
     html += `<text x="${pos.x}" y="${pos.y - 15}" text-anchor="middle" fill="var(--text)" font-size="10" font-weight="600" style="pointer-events:none;text-shadow:0 0 8px rgba(0,0,0,0.8)">${firstName}</text>`;
   });
 
@@ -992,13 +1013,13 @@ function renderCompatGrid() {
   const classes = { high: 'compat-high', good: 'compat-good', neutral: 'compat-neutral', challenging: 'compat-challenging' };
 
   let html = '<thead><tr><th></th>';
-  team.forEach(p => html += `<th>${p.name.split(' ')[0]}</th>`);
+  team.forEach(p => html += `<th>${label(p)}</th>`);
   html += '</tr></thead><tbody>';
 
   team.forEach((p1, i) => {
     const d1 = new Date(p1.birthday + 'T12:00:00');
     const s1 = getSign(d1.getMonth() + 1, d1.getDate()).name;
-    html += `<tr><th>${p1.name.split(' ')[0]}</th>`;
+    html += `<tr><th>${label(p1)}</th>`;
     team.forEach((p2, j) => {
       if (i === j) {
         html += `<td class="compat-self">⭐</td>`;
@@ -1009,7 +1030,7 @@ function renderCompatGrid() {
         const blurbs = COMPAT_BLURBS[level];
         const blurb = blurbs[Math.abs(i * 7 + j * 13) % blurbs.length];
         html += `<td class="${classes[level]}"
-          onmouseover="showTooltip(event, '${p1.name.split(' ')[0]} + ${p2.name.split(' ')[0]}', '${s1} × ${s2}', '${blurb.replace(/'/g, "\\'")}')"
+          onmouseover="showTooltip(event, '${label(p1)} + ${label(p2)}', '${s1} × ${s2}', '${blurb.replace(/'/g, "\\'")}')"
           onmouseout="hideTooltip()">${labels[level]}</td>`;
       }
     });
@@ -1050,7 +1071,7 @@ function renderSuperlatives() {
   signs.forEach(({ person, sign }) => {
     const award = signAwards[sign.name];
     if (award) {
-      awards.push({ ...award, name: person.name.split(' ')[0] });
+      awards.push({ ...award, name: label(person) });
     }
   });
 
