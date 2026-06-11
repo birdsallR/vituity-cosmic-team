@@ -708,6 +708,33 @@ let team = [
     ]
   },
   {
+    name: 'Nathan Stanley',
+    birthday: '1981-05-29',
+    birthTime: '5:05 PM',
+    birthLocation: 'Raleigh, NC',
+    hasFullChart: true,
+    planets: {
+      'Sun': { sign: 'Gemini', degree: '~8°' },
+      'Moon': { sign: 'Libra', degree: '~14°' },
+      'Rising': { sign: 'Libra', degree: '~20°' },
+      'Mercury': { sign: 'Gemini', degree: '~16°' },
+      'Venus': { sign: 'Gemini', degree: '~27°' },
+      'Mars': { sign: 'Gemini', degree: '~20°' },
+      'Jupiter': { sign: 'Libra', degree: '~7°' },
+      'Saturn': { sign: 'Libra', degree: '~7°' },
+      'Uranus': { sign: 'Scorpio', degree: '~27°' },
+      'Neptune': { sign: 'Sagittarius', degree: '~23°' },
+      'Pluto': { sign: 'Libra', degree: '~21° ℞' }
+    },
+    specialNotes: [
+      '♊♊♊♊ Gemini Stellium — Sun, Mercury, Venus & Mars all in Gemini: This is pure, concentrated mental electricity. Four of the chart\'s most personal planets in the sign of communication, wit, and ideas. If there\'s an angle you haven\'t considered, Nathan has. He\'s already 12 moves ahead and genuinely curious about all of them.',
+      '⚖️ Libra Overload — Moon, Rising, Jupiter, Saturn & Pluto all in Libra: A stunning air-on-air double feature. The social, diplomatic, harmony-seeking qualities of Libra are baked into the deepest layers of this chart. Built for partnership, built for fairness, built for seeing all sides. In a room full of chaos, he\'s already found the thread that ties it all together.',
+      '🌌 Born During the Great Conjunction: Jupiter and Saturn were conjunct in Libra in the 1980–81 cycle — one of astrology\'s rarest, most significant events, marking a generational turning point. Nathan arrived right in the thick of it. That doesn\'t explain everything, but it explains a lot.',
+      '💨 Almost Entirely Air: Between Gemini and Libra dominating this chart, Nathan operates in the realm of thought, connection, and ideas. Earth is nearly absent — rigid routines and inflexible structures aren\'t really the point here. The conversation IS the work.',
+      '🐓 Chinese Zodiac: Metal Rooster — precise, observant, principled, impossible to fool. The Rooster\'s legendary detail orientation plus the Metal element\'s quiet strength creates someone who notices what others miss and acts on it with calm confidence.'
+    ]
+  },
+  {
     name: 'Hilary',
     birthday: '1990-03-25',
     birthTime: '8:00 AM',
@@ -1157,7 +1184,7 @@ function spawnConfetti() {
   }
 }
 
-const DATA_VERSION = 6;
+const DATA_VERSION = 7;
 
 function saveTeam() {
   try {
